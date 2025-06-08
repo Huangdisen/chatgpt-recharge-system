@@ -8,18 +8,14 @@
       "runtime": "nodejs18.x"
     }
   },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/verify.php",
-      "dest": "/api/verify"
+      "source": "/verify.php",
+      "destination": "/api/verify"
     },
     {
-      "src": "/recharge.php",
-      "dest": "/api/recharge"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "source": "/recharge.php",
+      "destination": "/api/recharge"
     }
   ]
 }
