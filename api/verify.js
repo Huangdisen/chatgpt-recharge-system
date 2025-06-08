@@ -15,55 +15,27 @@ export default async function handler(req, res) {
   }
   
   try {
-    console.log('收到CDK验证请求:', req.body);
-    
     // 获取请求数据
     const requestBody = req.body;
     
-    if (!requestBody || !requestBody.cdk_key) {
-      return res.status(400).json({ 
-        error: 'CDK key is required',
-        received: requestBody 
-      });
-    }
-    
-    console.log('准备转发到远程API...');
-    
-    // 转发请求到远程API
-    const apiResponse = await fetch('https://gpt.applecz.com/api/cdks/verify', {
+    // 使用简化的fetch请求
+    const response = await fetch('https://gpt.applecz.com/api/cdks/verify', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (compatible; CDK-Verify/1.0)'
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(requestBody),
-      timeout: 10000
+      body: JSON.stringify(requestBody)
     });
     
-    console.log('远程API响应状态:', apiResponse.status);
+    const data = await response.json();
     
-    // 获取响应数据
-    const responseText = await apiResponse.text();
-    console.log('远程API响应内容:', responseText);
-    
-    // 设置相同的响应状态码
-    res.status(apiResponse.status);
-    
-    // 尝试解析JSON
-    try {
-      const jsonData = JSON.parse(responseText);
-      return res.json(jsonData);
-    } catch (parseError) {
-      console.log('JSON解析失败:', parseError);
-      return res.send(responseText);
-    }
+    return res.status(response.status).json(data);
     
   } catch (error) {
-    console.error('CDK验证错误详情:', error.message);
+    console.error('验证错误:', error);
     return res.status(500).json({ 
-      error: 'CDK验证失败',
-      message: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      error: 'Network request failed',
+      message: error.message
     });
   }
 } 

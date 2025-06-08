@@ -18,36 +18,24 @@ export default async function handler(req, res) {
     // 获取请求数据
     const requestBody = req.body;
     
-    // 转发请求到远程API
-    const apiResponse = await fetch('https://gpt.applecz.com/recharge', {
+    // 使用简化的fetch请求
+    const response = await fetch('https://gpt.applecz.com/recharge', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'CDK-Recharge-Service/1.0'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(requestBody)
     });
     
-    // 获取响应数据
-    const responseText = await apiResponse.text();
+    const data = await response.json();
     
-    // 设置相同的响应状态码
-    res.status(apiResponse.status);
-    
-    // 尝试解析JSON
-    try {
-      const jsonData = JSON.parse(responseText);
-      return res.json(jsonData);
-    } catch {
-      // 如果不是JSON，返回原始文本
-      return res.send(responseText);
-    }
+    return res.status(response.status).json(data);
     
   } catch (error) {
     console.error('充值错误:', error);
     return res.status(500).json({ 
-      error: '充值失败',
-      message: 'Network request failed'
+      error: 'Network request failed',
+      message: error.message
     });
   }
 } 
