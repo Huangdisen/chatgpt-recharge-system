@@ -1,11 +1,21 @@
 {
   "version": 2,
   "functions": {
-    "verify.php": {
+    "api/verify.php": {
       "runtime": "vercel-php@0.6.0"
     },
-    "recharge.php": {
+    "api/recharge.php": {
       "runtime": "vercel-php@0.6.0"
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/verify.php",
+      "destination": "/api/verify.php"
+    },
+    {
+      "source": "/recharge.php",
+      "destination": "/api/recharge.php"
+    }
+  ]
 }
