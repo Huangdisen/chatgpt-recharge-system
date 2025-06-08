@@ -715,34 +715,45 @@
       btn.innerHTML = '<span>充值中...</span>';
       showResult('step3Result', '正在处理充值...', 'info');
       
-      fetch('/recharge.php', {
+      const requestData = { 
+        fetch_token: cdkKey, 
+        session_data: JSON.parse(document.getElementById('tokenInput').value) 
+      };
+      
+      // 使用简化的充值API
+      fetch('/api/simple-recharge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          fetch_token: cdkKey, 
-          session_data: JSON.parse(document.getElementById('tokenInput').value) 
-        })
+        body: JSON.stringify(requestData)
       })
-      .then(res => {
-        if (!res.ok) throw new Error('Network response was not ok');
-        return res.json();
-      })
+      .then(res => res.json())
       .then(data => {
+        console.log('充值结果:', data);
         btn.disabled = false;
         btn.innerHTML = `<span>${t.rechargeBtnText}</span>`;
         
-        if (data.success) {
-          showResult('step3Result', t.recharge_success, 'success');
-          userSub = 'plus';
-          document.getElementById('subValue').textContent = t.subStatus[userSub];
+        if (data.success && data.apiResponse) {
+          try {
+            const apiData = JSON.parse(data.apiResponse);
+            if (apiData.success) {
+              showResult('step3Result', t.recharge_success, 'success');
+              userSub = 'plus';
+              document.getElementById('subValue').textContent = t.subStatus[userSub];
+            } else {
+              showResult('step3Result', t.recharge_fail, 'error');
+            }
+          } catch {
+            showResult('step3Result', t.recharge_fail, 'error');
+          }
         } else {
-          showResult('step3Result', t.recharge_fail, 'error');
+          showResult('step3Result', `充值错误: ${data.error || '未知错误'}`, 'error');
         }
       })
-      .catch(() => {
+      .catch(error => {
+        console.error('充值请求失败:', error);
         btn.disabled = false;
         btn.innerHTML = `<span>${t.rechargeBtnText}</span>`;
-        showResult('step3Result', t.cdk_network, 'error');
+        showResult('step3Result', `网络错误: ${error.message}`, 'error');
       });
     }
 
