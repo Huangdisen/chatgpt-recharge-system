@@ -15,6 +15,8 @@ export default async function handler(req, res) {
   }
   
   try {
+    console.log('收到请求:', req.body);
+    
     // 转发请求到远程API
     const response = await fetch('https://gpt.applecz.com/api/cdks/verify', {
       method: 'POST',
@@ -24,23 +26,26 @@ export default async function handler(req, res) {
       body: JSON.stringify(req.body)
     });
     
-    const data = await response.text();
+    console.log('远程API响应状态:', response.status);
     
-    // 设置响应状态码并返回数据
+    const data = await response.text();
+    console.log('远程API响应数据:', data);
+    
+    // 设置响应状态码
     res.status(response.status);
     
     try {
       // 尝试解析为JSON
       const jsonData = JSON.parse(data);
-      res.json(jsonData);
-    } catch {
-      // 如果不是JSON，直接返回文本
-      res.send(data);
+      return res.json(jsonData);
+    } catch (parseError) {
+      console.log('JSON解析失败，返回原始文本');
+      return res.send(data);
     }
     
   } catch (error) {
     console.error('API Error:', error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       error: 'Network request failed', 
       message: error.message 
     });
