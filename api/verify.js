@@ -1,3 +1,7 @@
+// 引入模块
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
 export default async function handler(req, res) {
   // 设置CORS头
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,26 +19,41 @@ export default async function handler(req, res) {
   }
   
   try {
-    // 获取请求数据
-    const requestBody = req.body;
+    // 确保请求体存在
+    if (!req.body) {
+      return res.status(400).json({ error: 'Missing request body' });
+    }
     
-    // 使用简化的fetch请求
-    const response = await fetch('https://gpt.applecz.com/api/cdks/verify', {
+    // 简单直接的请求转发
+    const apiUrl = 'https://gpt.applecz.com/api/cdks/verify';
+    
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'User-Agent': 'CDK-Verify-Service/1.0',
+        'Accept': '*/*'
       },
-      body: JSON.stringify(requestBody)
+      body: JSON.stringify(req.body)
     });
     
-    const data = await response.json();
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API错误响应:', response.status, errorText);
+      return res.status(response.status).json({ 
+        error: 'API request failed',
+        status: response.status,
+        message: errorText
+      });
+    }
     
-    return res.status(response.status).json(data);
+    const data = await response.json();
+    return res.status(200).json(data);
     
   } catch (error) {
-    console.error('验证错误:', error);
+    console.error('验证失败:', error);
     return res.status(500).json({ 
-      error: 'Network request failed',
+      error: 'Internal server error',
       message: error.message
     });
   }
