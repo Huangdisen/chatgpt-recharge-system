@@ -1,7 +1,3 @@
-// 引入模块
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-
 export default async function handler(req, res) {
   // 设置CORS头
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,36 +15,43 @@ export default async function handler(req, res) {
   }
   
   try {
+    console.log('收到请求:', { method: req.method, body: req.body });
+    
     // 确保请求体存在
     if (!req.body) {
       return res.status(400).json({ error: 'Missing request body' });
     }
     
-    // 简单直接的请求转发
+    // 简单直接的请求转发，使用与调试相同的方式
     const apiUrl = 'https://gpt.applecz.com/api/cdks/verify';
+    
+    console.log('发送请求到:', apiUrl);
+    console.log('请求体:', JSON.stringify(req.body));
     
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'CDK-Verify-Service/1.0',
-        'Accept': '*/*'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(req.body)
     });
     
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('API错误响应:', response.status, errorText);
-      return res.status(response.status).json({ 
-        error: 'API request failed',
-        status: response.status,
-        message: errorText
-      });
-    }
+    console.log('API响应状态:', response.status);
     
-    const data = await response.json();
-    return res.status(200).json(data);
+    const responseText = await response.text();
+    console.log('API响应内容:', responseText);
+    
+    // 总是返回200状态码，让前端处理业务逻辑
+    res.status(200);
+    res.setHeader('Content-Type', 'application/json');
+    
+    try {
+      const jsonData = JSON.parse(responseText);
+      return res.json(jsonData);
+    } catch (parseError) {
+      console.error('JSON解析失败:', parseError);
+      return res.json({ error: 'Invalid JSON response', data: responseText });
+    }
     
   } catch (error) {
     console.error('验证失败:', error);
