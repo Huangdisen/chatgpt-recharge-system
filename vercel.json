@@ -1,1 +1,25 @@
-{"version":2,"rewrites":[{"source":"/verify.php","destination":"https://gpt.applecz.com/api/cdks/verify"},{"source":"/recharge.php","destination":"https://gpt.applecz.com/recharge"}]}
+{
+  "version": 2,
+  "functions": {
+    "api/verify.js": {
+      "runtime": "nodejs18.x"
+    },
+    "api/recharge.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "routes": [
+    {
+      "src": "/verify.php",
+      "dest": "/api/verify"
+    },
+    {
+      "src": "/recharge.php",
+      "dest": "/api/recharge"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}
