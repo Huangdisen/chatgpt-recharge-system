@@ -1,0 +1,596 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ChatGPT 账号充值系统</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #f5f7fa;
+      font-family: 'PingFang SC', 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    .main-wrap {
+      max-width: 1100px;
+      margin: 40px auto;
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+    }
+    .left-panel, .right-panel {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      padding: 36px 32px 24px 32px;
+      transition: box-shadow 0.3s;
+    }
+    .left-panel {
+      flex: 1.2;
+      min-width: 350px;
+      max-width: 480px;
+    }
+    .right-panel {
+      flex: 1;
+      min-width: 320px;
+      max-width: 400px;
+    }
+    .logo {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+    .logo img {
+      width: 60px;
+      height: auto;
+      vertical-align: middle;
+      border-radius: 16px;
+      background: #f5f7fa;
+      box-shadow: 0 2px 8px rgba(16,163,127,0.08);
+    }
+    .sys-title {
+      font-size: 1.8rem;
+      color: #2d7cff;
+      font-weight: bold;
+      display: inline-block;
+      margin-left: 10px;
+      vertical-align: middle;
+      letter-spacing: 1px;
+    }
+    .sys-desc {
+      color: #888;
+      font-size: 15px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+    .step-title {
+      font-size: 1.15rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+      letter-spacing: 0.5px;
+    }
+    .step-flow {
+      margin-bottom: 18px;
+      color: #666;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    .input-label {
+      color: #666;
+      margin-bottom: 8px;
+      font-size: 15px;
+      display: block;
+      font-weight: 500;
+    }
+    .input {
+      width: 100%;
+      padding: 14px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.3s;
+      box-sizing: border-box;
+      background: #f8fafc;
+    }
+    .input:focus {
+      border-color: #2d7cff;
+      box-shadow: 0 0 0 3px rgba(45,124,255,0.08);
+      background: #fff;
+    }
+    .btn {
+      width: 100%;
+      padding: 15px 0;
+      border: none;
+      border-radius: 10px;
+      background: #2d7cff;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 10px rgba(45,124,255,0.08);
+      letter-spacing: 1px;
+    }
+    .btn:hover:not(:disabled) {
+      background: #1769e0;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(45,124,255,0.13);
+    }
+    .btn:active {
+      background: #1558b0;
+      transform: translateY(0);
+      box-shadow: 0 2px 5px rgba(45,124,255,0.08);
+    }
+    .btn:disabled {
+      background: #bfc9d9;
+      color: #fff;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .error {
+      background: #fff0f0;
+      color: #e74c3c;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 15px 0;
+      border-left: 4px solid #e74c3c;
+      animation: fadeIn 0.3s ease;
+      font-size: 15px;
+    }
+    .success {
+      background: #f0fff0;
+      color: #27ae60;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 15px 0;
+      border-left: 4px solid #27ae60;
+      animation: fadeIn 0.3s ease;
+      font-size: 15px;
+    }
+    .info {
+      background: #f0f8ff;
+      color: #3498db;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 15px 0;
+      border-left: 4px solid #3498db;
+      font-size: 15px;
+    }
+    .right-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+      letter-spacing: 0.5px;
+    }
+    .info-list {
+      margin-bottom: 18px;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 15px;
+    }
+    .info-label {
+      color: #777;
+    }
+    .info-value {
+      font-weight: bold;
+      color: #333;
+    }
+    .log-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+      background: #f8fafc;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(45,124,255,0.04);
+    }
+    .log-table th, .log-table td {
+      border: 1px solid #eee;
+      padding: 10px 5px;
+      text-align: center;
+    }
+    .log-table th {
+      background: #f5f7fa;
+      color: #666;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .log-table td {
+      background: #fff;
+      font-size: 14px;
+    }
+    .footer {
+      text-align: center;
+      color: #bbb;
+      font-size: 13px;
+      margin-top: 32px;
+      line-height: 1.6;
+    }
+    @media (max-width: 900px) {
+      .main-wrap { flex-direction: column; gap: 0; }
+      .left-panel, .right-panel { max-width: 100%; margin: 0 0 20px 0; }
+    }
+    @media (max-width: 600px) {
+      .main-wrap {
+        flex-direction: column;
+        margin: 16px 0;
+        gap: 0;
+      }
+      .left-panel, .right-panel {
+        padding: 18px 8px 16px 8px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(45,124,255,0.08);
+      }
+      .logo img {
+        width: 44px;
+        border-radius: 10px;
+      }
+      .sys-title {
+        font-size: 1.2rem;
+        margin-left: 6px;
+      }
+      .step-title, .right-title {
+        font-size: 1rem;
+      }
+      .input, .btn {
+        font-size: 15px;
+        padding: 12px 0;
+      }
+      .info-row {
+        font-size: 13px;
+        padding: 8px 0;
+      }
+      .log-table th, .log-table td {
+        font-size: 12px;
+        padding: 7px 2px;
+      }
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  </style>
+</head>
+<body>
+  <div class="main-wrap">
+    <div class="left-panel">
+      <div class="logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT Logo">
+        <span class="sys-title" id="sysTitle">ChatGPT 账号充值系统</span>
+      </div>
+      <div class="sys-desc" id="sysDesc">安全、快捷的账号充值服务</div>
+      <div class="step-title" id="stepTitle">账号充值流程</div>
+      <div class="step-flow" id="stepFlow">
+        <div>1. 登录您的ChatGPT账号，获取密钥</div>
+        <div>2. 输入CDK卡密</div>
+        <div>3. 验证并充值</div>
+      </div>
+      <div class="input-group">
+        <label class="input-label" id="tokenLabel">请输入账号密钥（accessToken）</label>
+        <div id="getTokenTip">如何获取？请先在网页登录自己的ChatGPT账号（<a href="https://chatgpt.com/auth/login" target="_blank">点击登录</a>），然后<a href="https://chatgpt.com/api/auth/session" target="_blank">点击获取</a>，并复制全部内容粘贴到上方输入框</div>
+        <input class="input" id="tokenInput" placeholder="粘贴accessToken" autocomplete="off" />
+      </div>
+      <div class="input-group">
+        <label class="input-label" id="cdkLabel">请输入CDK卡密</label>
+        <input class="input" id="cdkInput" placeholder="粘贴CDK" autocomplete="off" />
+      </div>
+      <button class="btn" id="verifyBtn" onclick="verifyCDK()">验证CDK</button>
+      <div id="resultMsg"></div>
+    </div>
+    <div class="right-panel">
+      <div class="right-title" id="accountInfoTitle">账号信息</div>
+      <div class="info-list">
+        <div class="info-row"><span class="info-label" id="emailLabel">邮箱账号：</span><span class="info-value" id="emailValue">-</span></div>
+        <div class="info-row"><span class="info-label" id="subLabel">订阅状态：</span><span class="info-value" id="subValue">-</span></div>
+      </div>
+      <div class="right-title" id="logTitle">操作日志</div>
+      <table class="log-table" id="logTable">
+        <thead>
+          <tr><th>账号</th><th>CDK</th><th>充值状态</th></tr>
+        </thead>
+        <tbody id="logBody">
+          <tr><td colspan="3">暂无日志</td></tr>
+        </tbody>
+      </table>
+      <button class="btn btn-secondary" id="clearInputBtn" style="margin-top:18px;">清空输入信息</button>
+    </div>
+  </div>
+  <div class="footer" id="footerText">© 2025 官方代理储值系统. 保留所有权利.<br>使用本服务即表示您同意我们的服务条款和隐私政策</div>
+  <script>
+    // 多语言数据
+    const langData = {
+      'zh-CN': {
+        sysTitle: 'ChatGPT 账号充值系统',
+        sysDesc: '安全、快捷的账号充值服务',
+        stepTitle: '账号充值流程',
+        stepFlow: ['1. 登录您的ChatGPT账号，获取密钥', '2. 输入CDK卡密', '3. 验证并充值'],
+        tokenLabel: '请输入账号密钥（accessToken）',
+        cdkLabel: '请输入CDK卡密',
+        verifyBtn: '验证CDK',
+        emailLabel: '邮箱账号：',
+        subLabel: '订阅状态：',
+        logTitle: '操作日志',
+        accountInfoTitle: '账号信息',
+        footer: '© 2025 官方代理储值系统. 保留所有权利.<br>使用本服务即表示您同意我们的服务条款和隐私政策',
+        logTableHead: ['账号', 'CDK', '充值状态'],
+        logEmpty: '暂无日志',
+        cdk_used: email => `此CDK已为${email.email}账户于${email.updated_at.replace(' ', '-')}充值`,
+        cdk_invalid: 'CDK无效，请检查后重试',
+        cdk_success: 'CDK验证成功，请点击充值',
+        cdk_plus: '您的账号已是PLUS会员，会员未过期，无法充值',
+        cdk_network: '网络请求失败，请稍后再试',
+        cdk_empty: '请输入CDK卡密',
+        token_empty: '请输入账号密钥',
+        rechargeBtn: '确认充值',
+        recharge_success: '充值成功！您的账号已升级为PLUS',
+        recharge_fail: '充值失败，请稍后再试',
+        logStatus: { success: '成功', used: '已用', fail: '失败' },
+        subStatus: { free: '免费', plus: 'PLUS' },
+        getTokenTip: '如何获取？请先在网页登录自己的ChatGPT账号（<a href="https://chatgpt.com/auth/login" target="_blank">点击登录</a>），然后<a href="https://chatgpt.com/api/auth/session" target="_blank">点击获取</a>，并复制全部内容粘贴到上方输入框'
+      },
+      'zh-TW': {
+        sysTitle: 'ChatGPT 賬號充值系統',
+        sysDesc: '安全、快捷的賬號充值服務',
+        stepTitle: '賬號充值流程',
+        stepFlow: ['1. 登錄您的ChatGPT賬號，獲取密鑰', '2. 輸入CDK卡密', '3. 驗證並充值'],
+        tokenLabel: '請輸入賬號密鑰（accessToken）',
+        cdkLabel: '請輸入CDK卡密',
+        verifyBtn: '驗證CDK',
+        emailLabel: '郵箱賬號：',
+        subLabel: '訂閱狀態：',
+        logTitle: '操作日誌',
+        accountInfoTitle: '賬號信息',
+        footer: '© 2025 官方代理儲值系統. 保留所有權利.<br>使用本服務即表示您同意我們的服務條款和隱私政策',
+        logTableHead: ['賬號', 'CDK', '充值狀態'],
+        logEmpty: '暫無日誌',
+        cdk_used: email => `此CDK已為${email.email}賬戶於${email.updated_at.replace(' ', '-')}充值`,
+        cdk_invalid: 'CDK無效，請檢查後重試',
+        cdk_success: 'CDK驗證成功，請點擊充值',
+        cdk_plus: '您的賬號已是PLUS會員，會員未過期，無法充值',
+        cdk_network: '網絡請求失敗，請稍後再試',
+        cdk_empty: '請輸入CDK卡密',
+        token_empty: '請輸入賬號密鑰',
+        rechargeBtn: '確認充值',
+        recharge_success: '充值成功！您的賬號已升級為PLUS',
+        recharge_fail: '充值失敗，請稍後再試',
+        logStatus: { success: '成功', used: '已用', fail: '失敗' },
+        subStatus: { free: '免費', plus: 'PLUS' },
+        getTokenTip: '如何獲取？請先在網頁端登錄自己的ChatGPT賬號（<a href="https://chatgpt.com/auth/login" target="_blank">點擊登錄</a>），然後<a href="https://chatgpt.com/api/auth/session" target="_blank">點擊獲取</a>，並複製全部內容粘貼到上方輸入框'
+      },
+      'en': {
+        sysTitle: 'ChatGPT Account Recharge System',
+        sysDesc: 'Safe and fast account recharge service',
+        stepTitle: 'Account Recharge Flow',
+        stepFlow: ['1. Login your Chatgpt acc and get accessToken', '2. Enter CDK', '3. Verify and Recharge'],
+        tokenLabel: 'Enter account accessToken',
+        cdkLabel: 'Enter CDK code',
+        verifyBtn: 'Verify CDK',
+        emailLabel: 'Email:',
+        subLabel: 'Subscription:',
+        logTitle: 'Operation Log',
+        accountInfoTitle: 'Account Info',
+        footer: '© 2025 Official Recharge System. All rights reserved.<br>By using this service, you agree to our Terms of Service and Privacy Policy',
+        logTableHead: ['Account', 'CDK', 'Status'],
+        logEmpty: 'No logs yet',
+        cdk_used: email => `This CDK was used by ${email.email} at ${email.updated_at.replace(' ', '-')}`,
+        cdk_invalid: 'CDK is invalid, please check and try again',
+        cdk_success: 'CDK verified, please click recharge',
+        cdk_plus: 'Your account is already PLUS, cannot recharge before expiry',
+        cdk_network: 'Network error, please try again later',
+        cdk_empty: 'Please enter CDK',
+        token_empty: 'Please enter accessToken',
+        rechargeBtn: 'Confirm Recharge',
+        recharge_success: 'Recharge successful! Your account is now PLUS',
+        recharge_fail: 'Recharge failed, please try again later',
+        logStatus: { success: 'Success', used: 'Used', fail: 'Failed' },
+        subStatus: { free: 'Free', plus: 'PLUS' },
+        getTokenTip: 'How to get? Please <a href="https://chatgpt.com/auth/login" target="_blank">log in</a> to your ChatGPT account on the web first, then <a href="https://chatgpt.com/api/auth/session" target="_blank">click here</a> to get it, and copy all the content into the input box above.'
+      }
+    };
+    let lang = 'zh-CN';
+    let userEmail = '-';
+    let userSub = '-';
+    let logList = [];
+    let isPlus = false;
+    let cdkKey = '';
+    let token = '';
+    // 多语言切换（可扩展按钮）
+    function setLang(l) {
+      lang = l;
+      const t = langData[lang];
+      document.getElementById('sysTitle').textContent = t.sysTitle;
+      document.getElementById('sysDesc').textContent = t.sysDesc;
+      document.getElementById('stepTitle').textContent = t.stepTitle;
+      document.getElementById('stepFlow').innerHTML = t.stepFlow.map(s=>`<div>${s}</div>`).join('');
+      document.getElementById('tokenLabel').textContent = t.tokenLabel;
+      document.getElementById('cdkLabel').textContent = t.cdkLabel;
+      document.getElementById('verifyBtn').textContent = t.verifyBtn;
+      document.getElementById('emailLabel').textContent = t.emailLabel;
+      document.getElementById('subLabel').textContent = t.subLabel;
+      document.getElementById('logTitle').textContent = t.logTitle;
+      document.getElementById('accountInfoTitle').textContent = t.accountInfoTitle;
+      document.getElementById('footerText').innerHTML = t.footer;
+      // 日志表头
+      const ths = t.logTableHead.map(h=>`<th>${h}</th>`).join('');
+      document.querySelector('#logTable thead tr').innerHTML = ths;
+      renderLog();
+      // 订阅状态
+      document.getElementById('subValue').textContent = t.subStatus[userSub] || userSub;
+      // 更新获取token提示
+      let tipElem = document.getElementById('getTokenTip');
+      if (!tipElem) {
+        tipElem = document.createElement('div');
+        tipElem.id = 'getTokenTip';
+        tipElem.style.fontSize = '13px';
+        tipElem.style.color = '#2d7cff';
+        tipElem.style.marginBottom = '6px';
+        tipElem.style.lineHeight = '1.6';
+        tipElem.style.userSelect = 'text';
+        document.getElementById('tokenInput').parentNode.insertBefore(tipElem, document.getElementById('tokenInput'));
+      }
+      tipElem.innerHTML = t.getTokenTip;
+      // 检查并重渲染CDK已被使用的提示
+      const resultMsg = document.getElementById('resultMsg');
+      if (resultMsg && resultMsg.innerHTML) {
+        // 检查是否为CDK已被使用的提示（中英文都支持）
+        const usedMatch = resultMsg.innerHTML.match(/([\w.-]+@[\w.-]+).*?(\d{4}-\d{2}-\d{2}-\d{2}:\d{2}:\d{2})/);
+        if (usedMatch && (resultMsg.innerHTML.includes('CDK') || resultMsg.innerHTML.includes('used'))) {
+          const email = usedMatch[1];
+          const updated_at = usedMatch[2];
+          resultMsg.innerHTML = `<div class="error">${t.cdk_used({email, updated_at})}</div>`;
+        }
+      }
+    }
+    // 渲染日志
+    function renderLog() {
+      const t = langData[lang];
+      const logBody = document.getElementById('logBody');
+      if (!logList.length) {
+        logBody.innerHTML = `<tr><td colspan="3">${t.logEmpty}</td></tr>`;
+        return;
+      }
+      logBody.innerHTML = logList.map(item =>
+        `<tr><td>${item.email}</td><td>${item.cdk}</td><td>${t.logStatus[item.status] || item.status}</td></tr>`
+      ).join('');
+    }
+    // 验证CDK
+    function verifyCDK() {
+      cdkKey = document.getElementById('cdkInput').value.trim();
+      token = document.getElementById('tokenInput').value.trim();
+      const t = langData[lang];
+      const resultMsg = document.getElementById('resultMsg');
+      resultMsg.innerHTML = '';
+      if (!token) {
+        resultMsg.innerHTML = `<div class="error">${t.token_empty}</div>`;
+        return;
+      }
+      if (!cdkKey) {
+        resultMsg.innerHTML = `<div class="error">${t.cdk_empty}</div>`;
+        return;
+      }
+      document.getElementById('verifyBtn').disabled = true;
+      resultMsg.innerHTML = `<div class="info">${t.verifyBtn}...</div>`;
+      // 假设token里有订阅信息（真实项目应后端校验）
+      // 这里模拟解析token
+      try {
+        // 假设token是json字符串
+        const session = JSON.parse(token);
+        userEmail = session.user?.email || '-';
+        userSub = session.account?.planType === 'plus' ? 'plus' : 'free';
+        isPlus = userSub === 'plus';
+        document.getElementById('emailValue').textContent = userEmail;
+        document.getElementById('subValue').textContent = t.subStatus[userSub] || userSub;
+      } catch {
+        userEmail = '-'; userSub = '-'; isPlus = false;
+        document.getElementById('emailValue').textContent = '-';
+        document.getElementById('subValue').textContent = '-';
+      }
+      // 如果是PLUS会员，禁止充值
+      if (isPlus) {
+        resultMsg.innerHTML = `<div class="error">${t.cdk_plus}</div>`;
+        document.getElementById('verifyBtn').disabled = true;
+        return;
+      }
+      // 请求CDK验证
+      fetch('/verify.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cdk_key: cdkKey })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('verifyBtn').disabled = false;
+        if (data.status === 'valid') {
+          resultMsg.innerHTML = `<div class="success">${t.cdk_success}</div><button class='btn' id='rechargeBtn'>${t.rechargeBtn}</button>`;
+        } else if (data.status === 'used') {
+          resultMsg.innerHTML = `<div class="error">${t.cdk_used(data)}</div>`;
+          logList.unshift({ email: data.email, cdk: cdkKey, status: 'used' });
+          renderLog();
+        } else {
+          resultMsg.innerHTML = `<div class="error">${t.cdk_invalid}</div>`;
+        }
+      })
+      .catch(() => {
+        document.getElementById('verifyBtn').disabled = false;
+        resultMsg.innerHTML = `<div class="error">${t.cdk_network}</div>`;
+      });
+    }
+    // 充值
+    function recharge() {
+      const t = langData[lang];
+      const resultMsg = document.getElementById('resultMsg');
+      const btn = document.getElementById('rechargeBtn');
+      if (btn) btn.disabled = true;
+      resultMsg.innerHTML = `<div class="info">${t.rechargeBtn}...</div>`;
+      fetch('/recharge.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fetch_token: cdkKey, session_data: JSON.parse(token) })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
+      .then(data => {
+        if (data.success) {
+          resultMsg.innerHTML = `<div class="success">${t.recharge_success}</div>`;
+          logList.unshift({ email: userEmail, cdk: cdkKey, status: 'success' });
+          renderLog();
+          if (btn) btn.disabled = true;
+          userSub = 'plus';
+          document.getElementById('subValue').textContent = langData[lang].subStatus[userSub] || userSub;
+        } else {
+          resultMsg.innerHTML = `<div class="error">${t.recharge_fail}</div>`;
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        resultMsg.innerHTML = `<div class="error">${t.cdk_network}</div>`;
+      });
+    }
+    // 多语言切换按钮（右上角）
+    const langBtn = document.createElement('div');
+    langBtn.style.position = 'fixed';
+    langBtn.style.top = '18px';
+    langBtn.style.right = '24px';
+    langBtn.style.zIndex = '999';
+    langBtn.innerHTML = `
+      <button onclick="setLang('zh-CN')">简</button>
+      <button onclick="setLang('zh-TW')">繁</button>
+      <button onclick="setLang('en')">EN</button>
+    `;
+    document.body.appendChild(langBtn);
+    // 默认英文
+    setLang('zh-CN');
+    // 事件委托，确保充值按钮一定能触发
+    document.body.addEventListener('click', function(e) {
+      if (e.target && e.target.id === 'rechargeBtn') {
+        recharge();
+      }
+    });
+    // 清空输入信息按钮事件
+    document.body.addEventListener('click', function(e) {
+      if (e.target && e.target.id === 'clearInputBtn') {
+        document.getElementById('tokenInput').value = '';
+        document.getElementById('cdkInput').value = '';
+        document.getElementById('emailValue').textContent = '-';
+        document.getElementById('subValue').textContent = '-';
+        userEmail = '-';
+        userSub = '-';
+        isPlus = false;
+        document.getElementById('resultMsg').innerHTML = '';
+      }
+    });
+  </script>
+</body>
+</html> 

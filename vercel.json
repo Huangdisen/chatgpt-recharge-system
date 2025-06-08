@@ -1,0 +1,1 @@
+{"version":2,"rewrites":[{"source":"/verify.php","destination":"https://gpt.applecz.com/api/cdks/verify"},{"source":"/recharge.php","destination":"https://gpt.applecz.com/recharge"}]}

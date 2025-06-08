@@ -1,0 +1,2 @@
+修改recharge.php 和 verify.php 文件 
+支持任意PHP版本
