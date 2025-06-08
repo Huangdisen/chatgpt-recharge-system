@@ -1,507 +1,662 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <title>ChatGPT 账号充值系统</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      background: #f5f7fa;
-      font-family: 'PingFang SC', 'Arial', sans-serif;
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+      min-height: 100vh;
       color: #333;
     }
-    .main-wrap {
-      max-width: 1100px;
-      margin: 40px auto;
+    
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      min-height: 100vh;
       display: flex;
-      gap: 32px;
+      flex-direction: column;
       justify-content: center;
     }
-    .left-panel, .right-panel {
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-      padding: 36px 32px 24px 32px;
-      transition: box-shadow 0.3s;
+    
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
     }
-    .left-panel {
-      flex: 1.2;
-      min-width: 350px;
-      max-width: 480px;
-    }
-    .right-panel {
-      flex: 1;
-      min-width: 320px;
-      max-width: 400px;
-    }
-    .logo {
-      text-align: left;
-      margin-bottom: 18px;
-    }
-    .logo img {
-      width: 60px;
-      height: auto;
-      vertical-align: middle;
-      border-radius: 16px;
-      background: #f5f7fa;
-      box-shadow: 0 2px 8px rgba(16,163,127,0.08);
-    }
-    .sys-title {
-      font-size: 1.8rem;
-      color: #2d7cff;
-      font-weight: bold;
-      display: inline-block;
-      margin-left: 10px;
-      vertical-align: middle;
+    
+    .title {
+      color: white;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
       letter-spacing: 1px;
     }
-    .sys-desc {
-      color: #888;
-      font-size: 15px;
-      margin-bottom: 28px;
-      text-align: left;
+    
+    .subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 16px;
+      font-weight: 300;
     }
-    .step-title {
-      font-size: 1.15rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #333;
-      letter-spacing: 0.5px;
+    
+    .step-indicator {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+      gap: 20px;
     }
-    .step-flow {
-      margin-bottom: 18px;
-      color: #666;
-      font-size: 15px;
-      line-height: 1.7;
+    
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
     }
-    .input-group {
-      margin-bottom: 20px;
+    
+    .step.active {
+      color: white;
     }
-    .input-label {
-      color: #666;
-      margin-bottom: 8px;
-      font-size: 15px;
+    
+    .step-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .step.active .step-number {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    .main-card {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    
+    .step-content {
+      display: none;
+    }
+    
+    .step-content.active {
       display: block;
-      font-weight: 500;
     }
-    .input {
+    
+    .step-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .step-icon {
+      font-size: 24px;
+    }
+    
+    .step-desc {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    
+    .form-group {
+      margin-bottom: 24px;
+    }
+    
+    .form-label {
+      display: block;
+      color: #333;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    
+    .form-input {
       width: 100%;
-      padding: 14px;
-      border: 1.5px solid #e0e0e0;
-      border-radius: 10px;
+      padding: 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
       font-size: 16px;
       outline: none;
-      transition: all 0.3s;
-      box-sizing: border-box;
-      background: #f8fafc;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
     }
-    .input:focus {
-      border-color: #2d7cff;
-      box-shadow: 0 0 0 3px rgba(45,124,255,0.08);
-      background: #fff;
+    
+    .form-input:focus {
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
+    
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+    }
+    
+    .help-text {
+      color: #666;
+      font-size: 13px;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+    
+    .help-text a {
+      color: #667eea;
+      text-decoration: none;
+    }
+    
+    .help-text a:hover {
+      text-decoration: underline;
+    }
+    
     .btn {
       width: 100%;
-      padding: 15px 0;
+      padding: 16px;
       border: none;
-      border-radius: 10px;
-      background: #2d7cff;
-      color: #fff;
-      font-size: 18px;
-      font-weight: bold;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
-      margin-top: 10px;
-      transition: all 0.3s;
-      box-shadow: 0 4px 10px rgba(45,124,255,0.08);
-      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      margin-top: 16px;
     }
+    
     .btn:hover:not(:disabled) {
-      background: #1769e0;
       transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(45,124,255,0.13);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
     }
-    .btn:active {
-      background: #1558b0;
-      transform: translateY(0);
-      box-shadow: 0 2px 5px rgba(45,124,255,0.08);
-    }
+    
     .btn:disabled {
-      background: #bfc9d9;
-      color: #fff;
+      background: #ccc;
       cursor: not-allowed;
-      opacity: 0.7;
+      transform: none;
     }
-    .error {
-      background: #fff0f0;
-      color: #e74c3c;
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin: 15px 0;
-      border-left: 4px solid #e74c3c;
-      animation: fadeIn 0.3s ease;
-      font-size: 15px;
+    
+    .btn-secondary {
+      background: #f8f9fa;
+      color: #666;
+      border: 2px solid #e0e0e0;
     }
-    .success {
-      background: #f0fff0;
-      color: #27ae60;
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin: 15px 0;
-      border-left: 4px solid #27ae60;
-      animation: fadeIn 0.3s ease;
-      font-size: 15px;
+    
+    .btn-secondary:hover:not(:disabled) {
+      background: #e9ecef;
+      box-shadow: none;
     }
-    .info {
-      background: #f0f8ff;
-      color: #3498db;
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin: 15px 0;
-      border-left: 4px solid #3498db;
-      font-size: 15px;
+    
+    .alert {
+      padding: 16px;
+      border-radius: 12px;
+      margin: 16px 0;
+      font-size: 14px;
+      line-height: 1.4;
     }
-    .right-title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #333;
-      letter-spacing: 0.5px;
+    
+    .alert-error {
+      background: #ffebee;
+      color: #c62828;
+      border-left: 4px solid #c62828;
     }
-    .info-list {
-      margin-bottom: 18px;
+    
+    .alert-success {
+      background: #e8f5e8;
+      color: #2e7d32;
+      border-left: 4px solid #2e7d32;
     }
+    
+    .alert-info {
+      background: #e3f2fd;
+      color: #1565c0;
+      border-left: 4px solid #1565c0;
+    }
+    
+    .account-info {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    
     .info-row {
       display: flex;
       justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid #eee;
-      font-size: 15px;
+      padding: 8px 0;
+      border-bottom: 1px solid #e0e0e0;
     }
+    
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    
     .info-label {
-      color: #777;
-    }
-    .info-value {
-      font-weight: bold;
-      color: #333;
-    }
-    .log-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 14px;
-      background: #f8fafc;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(45,124,255,0.04);
-    }
-    .log-table th, .log-table td {
-      border: 1px solid #eee;
-      padding: 10px 5px;
-      text-align: center;
-    }
-    .log-table th {
-      background: #f5f7fa;
       color: #666;
-      font-weight: 600;
-      font-size: 15px;
-    }
-    .log-table td {
-      background: #fff;
       font-size: 14px;
     }
+    
+    .info-value {
+      color: #333;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    
     .footer {
       text-align: center;
-      color: #bbb;
-      font-size: 13px;
-      margin-top: 32px;
-      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 12px;
+      margin-top: 40px;
+      line-height: 1.5;
     }
-    @media (max-width: 900px) {
-      .main-wrap { flex-direction: column; gap: 0; }
-      .left-panel, .right-panel { max-width: 100%; margin: 0 0 20px 0; }
+    
+    .lang-switcher {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 8px;
     }
+    
+    .lang-btn {
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.3s ease;
+    }
+    
+    .lang-btn:hover,
+    .lang-btn.active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
     @media (max-width: 600px) {
-      .main-wrap {
-        flex-direction: column;
-        margin: 16px 0;
-        gap: 0;
+      .container {
+        padding: 20px 16px;
       }
-      .left-panel, .right-panel {
-        padding: 18px 8px 16px 8px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(45,124,255,0.08);
+      
+      .main-card {
+        padding: 24px;
       }
-      .logo img {
-        width: 44px;
-        border-radius: 10px;
+      
+      .title {
+        font-size: 24px;
       }
-      .sys-title {
-        font-size: 1.2rem;
-        margin-left: 6px;
+      
+      .step-indicator {
+        gap: 12px;
       }
-      .step-title, .right-title {
-        font-size: 1rem;
-      }
-      .input, .btn {
-        font-size: 15px;
-        padding: 12px 0;
-      }
-      .info-row {
-        font-size: 13px;
-        padding: 8px 0;
-      }
-      .log-table th, .log-table td {
+      
+      .step {
         font-size: 12px;
-        padding: 7px 2px;
+      }
+      
+      .lang-switcher {
+        top: 16px;
+        right: 16px;
       }
     }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .step-content.active {
+      animation: fadeIn 0.3s ease;
+    }
   </style>
 </head>
 <body>
-  <div class="main-wrap">
-    <div class="left-panel">
-      <div class="logo">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT Logo">
-        <span class="sys-title" id="sysTitle">ChatGPT 账号充值系统</span>
-      </div>
-      <div class="sys-desc" id="sysDesc">安全、快捷的账号充值服务</div>
-      <div class="step-title" id="stepTitle">账号充值流程</div>
-      <div class="step-flow" id="stepFlow">
-        <div>1. 登录您的ChatGPT账号，获取密钥</div>
-        <div>2. 输入CDK卡密</div>
-        <div>3. 验证并充值</div>
-      </div>
-      <div class="input-group">
-        <label class="input-label" id="tokenLabel">请输入账号密钥（accessToken）</label>
-        <div id="getTokenTip">如何获取？请先在网页登录自己的ChatGPT账号（<a href="https://chatgpt.com/auth/login" target="_blank">点击登录</a>），然后<a href="https://chatgpt.com/api/auth/session" target="_blank">点击获取</a>，并复制全部内容粘贴到上方输入框</div>
-        <input class="input" id="tokenInput" placeholder="粘贴accessToken" autocomplete="off" />
-      </div>
-      <div class="input-group">
-        <label class="input-label" id="cdkLabel">请输入CDK卡密</label>
-        <input class="input" id="cdkInput" placeholder="粘贴CDK" autocomplete="off" />
-      </div>
-      <button class="btn" id="verifyBtn" onclick="verifyCDK()">验证CDK</button>
-      <div id="resultMsg"></div>
+  <!-- 语言切换器 -->
+  <div class="lang-switcher">
+    <button class="lang-btn active" onclick="setLang('zh-CN')">简</button>
+    <button class="lang-btn" onclick="setLang('zh-TW')">繁</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+
+  <div class="container">
+    <!-- 页面标题 -->
+    <div class="header">
+      <h1 class="title" id="pageTitle">ChatGPT 账号充值系统</h1>
+      <p class="subtitle" id="pageSubtitle">安全、快捷的充值服务</p>
     </div>
-    <div class="right-panel">
-      <div class="right-title" id="accountInfoTitle">账号信息</div>
-      <div class="info-list">
-        <div class="info-row"><span class="info-label" id="emailLabel">邮箱账号：</span><span class="info-value" id="emailValue">-</span></div>
-        <div class="info-row"><span class="info-label" id="subLabel">订阅状态：</span><span class="info-value" id="subValue">-</span></div>
+
+    <!-- 步骤指示器 -->
+    <div class="step-indicator">
+      <div class="step active" id="stepInd1">
+        <div class="step-number">1</div>
+        <span id="stepText1">验证卡密</span>
       </div>
-      <div class="right-title" id="logTitle">操作日志</div>
-      <table class="log-table" id="logTable">
-        <thead>
-          <tr><th>账号</th><th>CDK</th><th>充值状态</th></tr>
-        </thead>
-        <tbody id="logBody">
-          <tr><td colspan="3">暂无日志</td></tr>
-        </tbody>
-      </table>
-      <button class="btn btn-secondary" id="clearInputBtn" style="margin-top:18px;">清空输入信息</button>
+      <div class="step" id="stepInd2">
+        <div class="step-number">2</div>
+        <span id="stepText2">获取密钥</span>
+      </div>
+      <div class="step" id="stepInd3">
+        <div class="step-number">3</div>
+        <span id="stepText3">确认充值</span>
+      </div>
+    </div>
+
+    <!-- 主要内容卡片 -->
+    <div class="main-card">
+      <!-- 步骤 1: 验证卡密 -->
+      <div class="step-content active" id="step1">
+        <h2 class="step-title">
+          <span class="step-icon">🔑</span>
+          <span id="step1Title">第一步：卡密</span>
+        </h2>
+        <p class="step-desc" id="step1Desc">请输入您的CDK卡密进行验证</p>
+        
+        <div class="form-group">
+          <label class="form-label" id="cdkLabel">卡密 *</label>
+          <input type="text" class="form-input" id="cdkInput" placeholder="请输入CDK卡密" autocomplete="off">
+        </div>
+        
+        <button class="btn" id="verifyCdkBtn" onclick="verifyCDK()">
+          <span id="verifyBtnText">验证卡密</span>
+        </button>
+        
+        <div id="step1Result"></div>
+      </div>
+
+      <!-- 步骤 2: 获取密钥 -->
+      <div class="step-content" id="step2">
+        <h2 class="step-title">
+          <span class="step-icon">🎯</span>
+          <span id="step2Title">第二步：获取密钥</span>
+        </h2>
+        <p class="step-desc" id="step2Desc">获取您的ChatGPT账号Session Data</p>
+        
+        <div class="form-group">
+          <label class="form-label" id="tokenLabel">Session Data *</label>
+          <textarea class="form-input form-textarea" id="tokenInput" placeholder="请粘贴完整的Session Data"></textarea>
+          <div class="help-text" id="tokenHelp">
+            如何获取？请先在网页登录自己的ChatGPT账号（<a href="https://chatgpt.com/auth/login" target="_blank">点击登录</a>），然后<a href="https://chatgpt.com/api/auth/session" target="_blank">点击获取</a>，并复制全部内容粘贴到上方输入框
+          </div>
+        </div>
+        
+        <button class="btn" id="nextStepBtn" onclick="nextStep()">
+          <span id="nextBtnText">下一步</span>
+        </button>
+        
+        <button class="btn btn-secondary" onclick="prevStep()">
+          <span id="prevBtnText">上一步</span>
+        </button>
+        
+        <div id="step2Result"></div>
+      </div>
+
+      <!-- 步骤 3: 确认充值 -->
+      <div class="step-content" id="step3">
+        <h2 class="step-title">
+          <span class="step-icon">✅</span>
+          <span id="step3Title">第三步：确认充值</span>
+        </h2>
+        <p class="step-desc" id="step3Desc">确认信息并完成充值</p>
+        
+        <!-- 账号信息 -->
+        <div class="account-info">
+          <div class="info-row">
+            <span class="info-label" id="emailLabel">邮箱账号：</span>
+            <span class="info-value" id="emailValue">-</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label" id="subLabel">订阅状态：</span>
+            <span class="info-value" id="subValue">-</span>
+          </div>
+        </div>
+        
+        <button class="btn" id="rechargeBtn" onclick="recharge()">
+          <span id="rechargeBtnText">确认充值</span>
+        </button>
+        
+        <button class="btn btn-secondary" onclick="prevStep()">
+          <span id="prevBtnText2">上一步</span>
+        </button>
+        
+        <div id="step3Result"></div>
+      </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer" id="footerText">
+      © 2025 ChatGPT充值系统. 保留所有权利.<br>
+      使用本服务即表示您同意我们的服务条款和隐私政策
     </div>
   </div>
-  <div class="footer" id="footerText">© 2025 官方代理储值系统. 保留所有权利.<br>使用本服务即表示您同意我们的服务条款和隐私政策</div>
+
   <script>
     // 多语言数据
     const langData = {
       'zh-CN': {
-        sysTitle: 'ChatGPT 账号充值系统',
-        sysDesc: '安全、快捷的账号充值服务',
-        stepTitle: '账号充值流程',
-        stepFlow: ['1. 登录您的ChatGPT账号，获取密钥', '2. 输入CDK卡密', '3. 验证并充值'],
-        tokenLabel: '请输入账号密钥（accessToken）',
-        cdkLabel: '请输入CDK卡密',
-        verifyBtn: '验证CDK',
+        pageTitle: 'ChatGPT 账号充值系统',
+        pageSubtitle: '安全、快捷的充值服务',
+        stepText1: '验证卡密',
+        stepText2: '获取密钥',
+        stepText3: '确认充值',
+        step1Title: '第一步：卡密',
+        step1Desc: '请输入您的CDK卡密进行验证',
+        step2Title: '第二步：获取密钥',
+        step2Desc: '获取您的ChatGPT账号Session Data',
+        step3Title: '第三步：确认充值',
+        step3Desc: '确认信息并完成充值',
+        cdkLabel: '卡密 *',
+        tokenLabel: 'Session Data *',
         emailLabel: '邮箱账号：',
         subLabel: '订阅状态：',
-        logTitle: '操作日志',
-        accountInfoTitle: '账号信息',
-        footer: '© 2025 官方代理储值系统. 保留所有权利.<br>使用本服务即表示您同意我们的服务条款和隐私政策',
-        logTableHead: ['账号', 'CDK', '充值状态'],
-        logEmpty: '暂无日志',
+        verifyBtnText: '验证卡密',
+        nextBtnText: '下一步',
+        prevBtnText: '上一步',
+        rechargeBtnText: '确认充值',
+        footerText: '© 2025 ChatGPT充值系统. 保留所有权利.<br>使用本服务即表示您同意我们的服务条款和隐私政策',
+        tokenHelp: '如何获取？请先在网页登录自己的ChatGPT账号（<a href="https://chatgpt.com/auth/login" target="_blank">点击登录</a>），然后<a href="https://chatgpt.com/api/auth/session" target="_blank">点击获取</a>，并复制全部内容粘贴到上方输入框',
         cdk_used: email => `此CDK已为${email.email}账户于${email.updated_at.replace(' ', '-')}充值`,
         cdk_invalid: 'CDK无效，请检查后重试',
-        cdk_success: 'CDK验证成功，请点击充值',
+        cdk_success: 'CDK验证成功，请继续下一步',
         cdk_plus: '您的账号已是PLUS会员，会员未过期，无法充值',
         cdk_network: '网络请求失败，请稍后再试',
         cdk_empty: '请输入CDK卡密',
-        token_empty: '请输入账号密钥',
-        rechargeBtn: '确认充值',
+        token_empty: '请输入Session Data',
         recharge_success: '充值成功！您的账号已升级为PLUS',
         recharge_fail: '充值失败，请稍后再试',
-        logStatus: { success: '成功', used: '已用', fail: '失败' },
-        subStatus: { free: '免费', plus: 'PLUS' },
-        getTokenTip: '如何获取？请先在网页登录自己的ChatGPT账号（<a href="https://chatgpt.com/auth/login" target="_blank">点击登录</a>），然后<a href="https://chatgpt.com/api/auth/session" target="_blank">点击获取</a>，并复制全部内容粘贴到上方输入框'
+        subStatus: { free: '免费', plus: 'PLUS' }
       },
       'zh-TW': {
-        sysTitle: 'ChatGPT 賬號充值系統',
-        sysDesc: '安全、快捷的賬號充值服務',
-        stepTitle: '賬號充值流程',
-        stepFlow: ['1. 登錄您的ChatGPT賬號，獲取密鑰', '2. 輸入CDK卡密', '3. 驗證並充值'],
-        tokenLabel: '請輸入賬號密鑰（accessToken）',
-        cdkLabel: '請輸入CDK卡密',
-        verifyBtn: '驗證CDK',
+        pageTitle: 'ChatGPT 賬號充值系統',
+        pageSubtitle: '安全、快捷的賬號充值服務',
+        stepText1: '驗證卡密',
+        stepText2: '獲取密鑰',
+        stepText3: '確認充值',
+        step1Title: '第一步：卡密',
+        step1Desc: '請輸入您的CDK卡密進行驗證',
+        step2Title: '第二步：獲取密鑰',
+        step2Desc: '獲取您的ChatGPT賬號Session Data',
+        step3Title: '第三步：確認充值',
+        step3Desc: '確認信息並完成充值',
+        cdkLabel: '卡密 *',
+        tokenLabel: 'Session Data *',
         emailLabel: '郵箱賬號：',
         subLabel: '訂閱狀態：',
-        logTitle: '操作日誌',
-        accountInfoTitle: '賬號信息',
-        footer: '© 2025 官方代理儲值系統. 保留所有權利.<br>使用本服務即表示您同意我們的服務條款和隱私政策',
-        logTableHead: ['賬號', 'CDK', '充值狀態'],
-        logEmpty: '暫無日誌',
+        verifyBtnText: '驗證卡密',
+        nextBtnText: '下一步',
+        prevBtnText: '上一步',
+        rechargeBtnText: '確認充值',
+        footerText: '© 2025 ChatGPT充值系統. 保留所有權利.<br>使用本服務即表示您同意我們的服務條款和隱私政策',
+        tokenHelp: '如何獲取？請先在網頁端登錄自己的ChatGPT賬號（<a href="https://chatgpt.com/auth/login" target="_blank">點擊登錄</a>），然後<a href="https://chatgpt.com/api/auth/session" target="_blank">點擊獲取</a>，並複製全部內容粘貼到上方輸入框',
         cdk_used: email => `此CDK已為${email.email}賬戶於${email.updated_at.replace(' ', '-')}充值`,
         cdk_invalid: 'CDK無效，請檢查後重試',
-        cdk_success: 'CDK驗證成功，請點擊充值',
+        cdk_success: 'CDK驗證成功，請繼續下一步',
         cdk_plus: '您的賬號已是PLUS會員，會員未過期，無法充值',
         cdk_network: '網絡請求失敗，請稍後再試',
         cdk_empty: '請輸入CDK卡密',
-        token_empty: '請輸入賬號密鑰',
-        rechargeBtn: '確認充值',
+        token_empty: '請輸入Session Data',
         recharge_success: '充值成功！您的賬號已升級為PLUS',
         recharge_fail: '充值失敗，請稍後再試',
-        logStatus: { success: '成功', used: '已用', fail: '失敗' },
-        subStatus: { free: '免費', plus: 'PLUS' },
-        getTokenTip: '如何獲取？請先在網頁端登錄自己的ChatGPT賬號（<a href="https://chatgpt.com/auth/login" target="_blank">點擊登錄</a>），然後<a href="https://chatgpt.com/api/auth/session" target="_blank">點擊獲取</a>，並複製全部內容粘貼到上方輸入框'
+        subStatus: { free: '免費', plus: 'PLUS' }
       },
       'en': {
-        sysTitle: 'ChatGPT Account Recharge System',
-        sysDesc: 'Safe and fast account recharge service',
-        stepTitle: 'Account Recharge Flow',
-        stepFlow: ['1. Login your Chatgpt acc and get accessToken', '2. Enter CDK', '3. Verify and Recharge'],
-        tokenLabel: 'Enter account accessToken',
-        cdkLabel: 'Enter CDK code',
-        verifyBtn: 'Verify CDK',
+        pageTitle: 'ChatGPT Account Recharge System',
+        pageSubtitle: 'Safe and fast account recharge service',
+        stepText1: 'Verify CDK',
+        stepText2: 'Get Token',
+        stepText3: 'Confirm',
+        step1Title: 'Step 1: CDK',
+        step1Desc: 'Please enter your CDK code for verification',
+        step2Title: 'Step 2: Get Session Data',
+        step2Desc: 'Get your ChatGPT account Session Data',
+        step3Title: 'Step 3: Confirm Recharge',
+        step3Desc: 'Confirm information and complete recharge',
+        cdkLabel: 'CDK Code *',
+        tokenLabel: 'Session Data *',
         emailLabel: 'Email:',
         subLabel: 'Subscription:',
-        logTitle: 'Operation Log',
-        accountInfoTitle: 'Account Info',
-        footer: '© 2025 Official Recharge System. All rights reserved.<br>By using this service, you agree to our Terms of Service and Privacy Policy',
-        logTableHead: ['Account', 'CDK', 'Status'],
-        logEmpty: 'No logs yet',
+        verifyBtnText: 'Verify CDK',
+        nextBtnText: 'Next Step',
+        prevBtnText: 'Previous',
+        rechargeBtnText: 'Confirm Recharge',
+        footerText: '© 2025 ChatGPT Recharge System. All rights reserved.<br>By using this service, you agree to our Terms of Service and Privacy Policy',
+        tokenHelp: 'How to get? Please <a href="https://chatgpt.com/auth/login" target="_blank">log in</a> to your ChatGPT account on the web first, then <a href="https://chatgpt.com/api/auth/session" target="_blank">click here</a> to get it, and copy all the content into the input box above.',
         cdk_used: email => `This CDK was used by ${email.email} at ${email.updated_at.replace(' ', '-')}`,
         cdk_invalid: 'CDK is invalid, please check and try again',
-        cdk_success: 'CDK verified, please click recharge',
+        cdk_success: 'CDK verified successfully, please continue to next step',
         cdk_plus: 'Your account is already PLUS, cannot recharge before expiry',
         cdk_network: 'Network error, please try again later',
-        cdk_empty: 'Please enter CDK',
-        token_empty: 'Please enter accessToken',
-        rechargeBtn: 'Confirm Recharge',
+        cdk_empty: 'Please enter CDK code',
+        token_empty: 'Please enter Session Data',
         recharge_success: 'Recharge successful! Your account is now PLUS',
         recharge_fail: 'Recharge failed, please try again later',
-        logStatus: { success: 'Success', used: 'Used', fail: 'Failed' },
-        subStatus: { free: 'Free', plus: 'PLUS' },
-        getTokenTip: 'How to get? Please <a href="https://chatgpt.com/auth/login" target="_blank">log in</a> to your ChatGPT account on the web first, then <a href="https://chatgpt.com/api/auth/session" target="_blank">click here</a> to get it, and copy all the content into the input box above.'
+        subStatus: { free: 'Free', plus: 'PLUS' }
       }
     };
+
     let lang = 'zh-CN';
+    let currentStep = 1;
     let userEmail = '-';
     let userSub = '-';
-    let logList = [];
     let isPlus = false;
     let cdkKey = '';
     let token = '';
-    // 多语言切换（可扩展按钮）
+
+    // 语言切换
     function setLang(l) {
       lang = l;
       const t = langData[lang];
-      document.getElementById('sysTitle').textContent = t.sysTitle;
-      document.getElementById('sysDesc').textContent = t.sysDesc;
-      document.getElementById('stepTitle').textContent = t.stepTitle;
-      document.getElementById('stepFlow').innerHTML = t.stepFlow.map(s=>`<div>${s}</div>`).join('');
-      document.getElementById('tokenLabel').textContent = t.tokenLabel;
-      document.getElementById('cdkLabel').textContent = t.cdkLabel;
-      document.getElementById('verifyBtn').textContent = t.verifyBtn;
-      document.getElementById('emailLabel').textContent = t.emailLabel;
-      document.getElementById('subLabel').textContent = t.subLabel;
-      document.getElementById('logTitle').textContent = t.logTitle;
-      document.getElementById('accountInfoTitle').textContent = t.accountInfoTitle;
-      document.getElementById('footerText').innerHTML = t.footer;
-      // 日志表头
-      const ths = t.logTableHead.map(h=>`<th>${h}</th>`).join('');
-      document.querySelector('#logTable thead tr').innerHTML = ths;
-      renderLog();
-      // 订阅状态
-      document.getElementById('subValue').textContent = t.subStatus[userSub] || userSub;
-      // 更新获取token提示
-      let tipElem = document.getElementById('getTokenTip');
-      if (!tipElem) {
-        tipElem = document.createElement('div');
-        tipElem.id = 'getTokenTip';
-        tipElem.style.fontSize = '13px';
-        tipElem.style.color = '#2d7cff';
-        tipElem.style.marginBottom = '6px';
-        tipElem.style.lineHeight = '1.6';
-        tipElem.style.userSelect = 'text';
-        document.getElementById('tokenInput').parentNode.insertBefore(tipElem, document.getElementById('tokenInput'));
-      }
-      tipElem.innerHTML = t.getTokenTip;
-      // 检查并重渲染CDK已被使用的提示
-      const resultMsg = document.getElementById('resultMsg');
-      if (resultMsg && resultMsg.innerHTML) {
-        // 检查是否为CDK已被使用的提示（中英文都支持）
-        const usedMatch = resultMsg.innerHTML.match(/([\w.-]+@[\w.-]+).*?(\d{4}-\d{2}-\d{2}-\d{2}:\d{2}:\d{2})/);
-        if (usedMatch && (resultMsg.innerHTML.includes('CDK') || resultMsg.innerHTML.includes('used'))) {
-          const email = usedMatch[1];
-          const updated_at = usedMatch[2];
-          resultMsg.innerHTML = `<div class="error">${t.cdk_used({email, updated_at})}</div>`;
+      
+      // 更新语言按钮状态
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      // 更新页面文本
+      Object.keys(t).forEach(key => {
+        const element = document.getElementById(key);
+        if (element && typeof t[key] === 'string') {
+          element.innerHTML = t[key];
         }
-      }
+      });
+      
+      // 更新订阅状态
+      document.getElementById('subValue').textContent = t.subStatus[userSub] || userSub;
     }
-    // 渲染日志
-    function renderLog() {
-      const t = langData[lang];
-      const logBody = document.getElementById('logBody');
-      if (!logList.length) {
-        logBody.innerHTML = `<tr><td colspan="3">${t.logEmpty}</td></tr>`;
-        return;
-      }
-      logBody.innerHTML = logList.map(item =>
-        `<tr><td>${item.email}</td><td>${item.cdk}</td><td>${t.logStatus[item.status] || item.status}</td></tr>`
-      ).join('');
+
+    // 步骤切换
+    function goToStep(step) {
+      // 隐藏所有步骤
+      document.querySelectorAll('.step-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.querySelectorAll('.step').forEach(stepEl => {
+        stepEl.classList.remove('active');
+      });
+      
+      // 显示当前步骤
+      document.getElementById(`step${step}`).classList.add('active');
+      document.getElementById(`stepInd${step}`).classList.add('active');
+      
+      currentStep = step;
     }
-    // 验证CDK
-    function verifyCDK() {
-      cdkKey = document.getElementById('cdkInput').value.trim();
-      token = document.getElementById('tokenInput').value.trim();
+
+    function nextStep() {
+      const token = document.getElementById('tokenInput').value.trim();
       const t = langData[lang];
-      const resultMsg = document.getElementById('resultMsg');
-      resultMsg.innerHTML = '';
+      
       if (!token) {
-        resultMsg.innerHTML = `<div class="error">${t.token_empty}</div>`;
+        showResult('step2Result', t.token_empty, 'error');
         return;
       }
-      if (!cdkKey) {
-        resultMsg.innerHTML = `<div class="error">${t.cdk_empty}</div>`;
-        return;
-      }
-      document.getElementById('verifyBtn').disabled = true;
-      resultMsg.innerHTML = `<div class="info">${t.verifyBtn}...</div>`;
-      // 假设token里有订阅信息（真实项目应后端校验）
-      // 这里模拟解析token
+      
+      // 解析token获取账号信息
       try {
-        // 假设token是json字符串
         const session = JSON.parse(token);
         userEmail = session.user?.email || '-';
         userSub = session.account?.planType === 'plus' ? 'plus' : 'free';
         isPlus = userSub === 'plus';
+        
         document.getElementById('emailValue').textContent = userEmail;
         document.getElementById('subValue').textContent = t.subStatus[userSub] || userSub;
+        
+        if (isPlus) {
+          showResult('step2Result', t.cdk_plus, 'error');
+          return;
+        }
+        
+        goToStep(3);
       } catch {
-        userEmail = '-'; userSub = '-'; isPlus = false;
+        userEmail = '-'; 
+        userSub = '-'; 
+        isPlus = false;
         document.getElementById('emailValue').textContent = '-';
         document.getElementById('subValue').textContent = '-';
+        goToStep(3);
       }
-      // 如果是PLUS会员，禁止充值
-      if (isPlus) {
-        resultMsg.innerHTML = `<div class="error">${t.cdk_plus}</div>`;
-        document.getElementById('verifyBtn').disabled = true;
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        goToStep(currentStep - 1);
+      }
+    }
+
+    // CDK验证
+    function verifyCDK() {
+      cdkKey = document.getElementById('cdkInput').value.trim();
+      const t = langData[lang];
+      const btn = document.getElementById('verifyCdkBtn');
+      
+      if (!cdkKey) {
+        showResult('step1Result', t.cdk_empty, 'error');
         return;
       }
-      // 请求CDK验证
+      
+      btn.disabled = true;
+      btn.innerHTML = '<span>验证中...</span>';
+      showResult('step1Result', '正在验证CDK...', 'info');
+      
       fetch('/verify.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -509,88 +664,75 @@
       })
       .then(res => res.json())
       .then(data => {
-        document.getElementById('verifyBtn').disabled = false;
+        btn.disabled = false;
+        btn.innerHTML = `<span>${t.verifyBtnText}</span>`;
+        
         if (data.status === 'valid') {
-          resultMsg.innerHTML = `<div class="success">${t.cdk_success}</div><button class='btn' id='rechargeBtn'>${t.rechargeBtn}</button>`;
+          showResult('step1Result', t.cdk_success, 'success');
+          setTimeout(() => goToStep(2), 1500);
         } else if (data.status === 'used') {
-          resultMsg.innerHTML = `<div class="error">${t.cdk_used(data)}</div>`;
-          logList.unshift({ email: data.email, cdk: cdkKey, status: 'used' });
-          renderLog();
+          showResult('step1Result', t.cdk_used(data), 'error');
         } else {
-          resultMsg.innerHTML = `<div class="error">${t.cdk_invalid}</div>`;
+          showResult('step1Result', t.cdk_invalid, 'error');
         }
       })
       .catch(() => {
-        document.getElementById('verifyBtn').disabled = false;
-        resultMsg.innerHTML = `<div class="error">${t.cdk_network}</div>`;
+        btn.disabled = false;
+        btn.innerHTML = `<span>${t.verifyBtnText}</span>`;
+        showResult('step1Result', t.cdk_network, 'error');
       });
     }
+
     // 充值
     function recharge() {
       const t = langData[lang];
-      const resultMsg = document.getElementById('resultMsg');
       const btn = document.getElementById('rechargeBtn');
-      if (btn) btn.disabled = true;
-      resultMsg.innerHTML = `<div class="info">${t.rechargeBtn}...</div>`;
+      
+      btn.disabled = true;
+      btn.innerHTML = '<span>充值中...</span>';
+      showResult('step3Result', '正在处理充值...', 'info');
+      
       fetch('/recharge.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fetch_token: cdkKey, session_data: JSON.parse(token) })
+        body: JSON.stringify({ 
+          fetch_token: cdkKey, 
+          session_data: JSON.parse(document.getElementById('tokenInput').value) 
+        })
       })
       .then(res => {
         if (!res.ok) throw new Error('Network response was not ok');
         return res.json();
       })
       .then(data => {
+        btn.disabled = false;
+        btn.innerHTML = `<span>${t.rechargeBtnText}</span>`;
+        
         if (data.success) {
-          resultMsg.innerHTML = `<div class="success">${t.recharge_success}</div>`;
-          logList.unshift({ email: userEmail, cdk: cdkKey, status: 'success' });
-          renderLog();
-          if (btn) btn.disabled = true;
+          showResult('step3Result', t.recharge_success, 'success');
           userSub = 'plus';
-          document.getElementById('subValue').textContent = langData[lang].subStatus[userSub] || userSub;
+          document.getElementById('subValue').textContent = t.subStatus[userSub];
         } else {
-          resultMsg.innerHTML = `<div class="error">${t.recharge_fail}</div>`;
+          showResult('step3Result', t.recharge_fail, 'error');
         }
       })
-      .catch((error) => {
-        console.error(error);
-        resultMsg.innerHTML = `<div class="error">${t.cdk_network}</div>`;
+      .catch(() => {
+        btn.disabled = false;
+        btn.innerHTML = `<span>${t.rechargeBtnText}</span>`;
+        showResult('step3Result', t.cdk_network, 'error');
       });
     }
-    // 多语言切换按钮（右上角）
-    const langBtn = document.createElement('div');
-    langBtn.style.position = 'fixed';
-    langBtn.style.top = '18px';
-    langBtn.style.right = '24px';
-    langBtn.style.zIndex = '999';
-    langBtn.innerHTML = `
-      <button onclick="setLang('zh-CN')">简</button>
-      <button onclick="setLang('zh-TW')">繁</button>
-      <button onclick="setLang('en')">EN</button>
-    `;
-    document.body.appendChild(langBtn);
-    // 默认英文
+
+    // 显示结果消息
+    function showResult(containerId, message, type) {
+      const container = document.getElementById(containerId);
+      const alertClass = type === 'error' ? 'alert-error' : 
+                        type === 'success' ? 'alert-success' : 'alert-info';
+      container.innerHTML = `<div class="alert ${alertClass}">${message}</div>`;
+    }
+
+    // 初始化
     setLang('zh-CN');
-    // 事件委托，确保充值按钮一定能触发
-    document.body.addEventListener('click', function(e) {
-      if (e.target && e.target.id === 'rechargeBtn') {
-        recharge();
-      }
-    });
-    // 清空输入信息按钮事件
-    document.body.addEventListener('click', function(e) {
-      if (e.target && e.target.id === 'clearInputBtn') {
-        document.getElementById('tokenInput').value = '';
-        document.getElementById('cdkInput').value = '';
-        document.getElementById('emailValue').textContent = '-';
-        document.getElementById('subValue').textContent = '-';
-        userEmail = '-';
-        userSub = '-';
-        isPlus = false;
-        document.getElementById('resultMsg').innerHTML = '';
-      }
-    });
   </script>
 </body>
 </html> 
