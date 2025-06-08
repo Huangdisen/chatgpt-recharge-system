@@ -1,21 +1,13 @@
 {
   "version": 2,
-  "functions": {
-    "api/verify.php": {
-      "runtime": "vercel-php@0.6.0"
-    },
-    "api/recharge.php": {
-      "runtime": "vercel-php@0.6.0"
-    }
-  },
   "rewrites": [
     {
       "source": "/verify.php",
-      "destination": "/api/verify.php"
+      "destination": "https://gpt.applecz.com/api/cdks/verify"
     },
     {
       "source": "/recharge.php",
-      "destination": "/api/recharge.php"
+      "destination": "https://gpt.applecz.com/recharge"
     }
   ]
 }
