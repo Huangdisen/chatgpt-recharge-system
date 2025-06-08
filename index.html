@@ -657,29 +657,52 @@
       btn.innerHTML = '<span>验证中...</span>';
       showResult('step1Result', '正在验证CDK...', 'info');
       
-      fetch('/verify.php', {
+      // 先尝试简单测试API
+      fetch('/api/simple-verify?test=ping', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cdk_key: cdkKey })
       })
       .then(res => res.json())
+      .then(testData => {
+        console.log('API测试结果:', testData);
+        
+        // 如果测试成功，继续实际验证
+        return fetch('/api/simple-verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cdk_key: cdkKey })
+        });
+      })
+      .then(res => res.json())
       .then(data => {
+        console.log('验证结果:', data);
         btn.disabled = false;
         btn.innerHTML = `<span>${t.verifyBtnText}</span>`;
         
-        if (data.status === 'valid') {
-          showResult('step1Result', t.cdk_success, 'success');
-          setTimeout(() => goToStep(2), 1500);
-        } else if (data.status === 'used') {
-          showResult('step1Result', t.cdk_used(data), 'error');
+        if (data.success && data.apiResponse) {
+          try {
+            const apiData = JSON.parse(data.apiResponse);
+            if (apiData.status === 'valid') {
+              showResult('step1Result', t.cdk_success, 'success');
+              setTimeout(() => goToStep(2), 1500);
+            } else if (apiData.status === 'used') {
+              showResult('step1Result', t.cdk_used(apiData), 'error');
+            } else {
+              showResult('step1Result', t.cdk_invalid, 'error');
+            }
+          } catch {
+            showResult('step1Result', t.cdk_invalid, 'error');
+          }
         } else {
-          showResult('step1Result', t.cdk_invalid, 'error');
+          showResult('step1Result', `API错误: ${data.error || '未知错误'}`, 'error');
         }
       })
-      .catch(() => {
+      .catch(error => {
+        console.error('请求失败:', error);
         btn.disabled = false;
         btn.innerHTML = `<span>${t.verifyBtnText}</span>`;
-        showResult('step1Result', t.cdk_network, 'error');
+        showResult('step1Result', `网络错误: ${error.message}`, 'error');
       });
     }
 
