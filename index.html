@@ -330,6 +330,135 @@
     .step-content.active {
       animation: fadeIn 0.3s ease;
     }
+
+    /* 视频教程按钮 */
+    .video-tutorial-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 25px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+      text-decoration: none;
+    }
+
+    .video-tutorial-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* 视频模态框 */
+    .video-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .video-modal.show {
+      display: flex;
+      opacity: 1;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-modal-content {
+      position: relative;
+      background: white;
+      border-radius: 16px;
+      padding: 0;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+    }
+
+    .video-modal.show .video-modal-content {
+      transform: scale(1);
+    }
+
+    .video-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 25px;
+      border-bottom: 1px solid #e0e0e0;
+      background: #f8f9fa;
+    }
+
+    .video-modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+
+    .video-modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #666;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .video-modal-close:hover {
+      background: #e9ecef;
+      color: #333;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 16 / 9;
+    }
+
+    .video-player {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 600px) {
+      .video-modal-content {
+        max-width: 95vw;
+        max-height: 95vh;
+      }
+      
+      .video-modal-header {
+        padding: 15px 20px;
+      }
+      
+      .video-modal-title {
+        font-size: 16px;
+      }
+      
+      .video-tutorial-btn {
+        font-size: 12px;
+        padding: 8px 16px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -345,6 +474,12 @@
     <div class="header">
       <h1 class="title" id="pageTitle">ChatGPT 账号充值系统</h1>
       <p class="subtitle" id="pageSubtitle">安全、快捷的充值服务</p>
+      
+      <!-- 视频教程按钮 -->
+      <button class="video-tutorial-btn" onclick="openVideoTutorial()">
+        <span>🎥</span>
+        <span id="videoTutorialBtnText">观看教程</span>
+      </button>
     </div>
 
     <!-- 步骤指示器 -->
@@ -451,6 +586,24 @@
     </div>
   </div>
 
+  <!-- 视频教程模态框 -->
+  <div id="videoModal" class="video-modal">
+    <div class="video-modal-content">
+      <div class="video-modal-header">
+        <h3 class="video-modal-title" id="videoModalTitle">充值教程视频</h3>
+        <button class="video-modal-close" onclick="closeVideoTutorial()">×</button>
+      </div>
+      <div class="video-container">
+        <!-- 方案4：自建视频链接 - 使用示例视频进行演示 -->
+        <video class="video-player" id="tutorialVideo" controls preload="metadata">
+          <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+          <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.webm" type="video/webm">
+          您的浏览器不支持视频播放
+        </video>
+      </div>
+    </div>
+  </div>
+
   <script>
     // 多语言数据
     const langData = {
@@ -485,7 +638,9 @@
         token_empty: '请输入Session Data',
         recharge_success: '充值成功！您的账号已升级为PLUS',
         recharge_fail: '充值失败，请稍后再试',
-        subStatus: { free: '免费', plus: 'PLUS' }
+        subStatus: { free: '免费', plus: 'PLUS' },
+        videoTutorialBtnText: '观看教程',
+        videoModalTitle: '充值教程视频'
       },
       'zh-TW': {
         pageTitle: 'ChatGPT 賬號充值系統',
@@ -518,7 +673,9 @@
         token_empty: '請輸入Session Data',
         recharge_success: '充值成功！您的賬號已升級為PLUS',
         recharge_fail: '充值失敗，請稍後再試',
-        subStatus: { free: '免費', plus: 'PLUS' }
+        subStatus: { free: '免費', plus: 'PLUS' },
+        videoTutorialBtnText: '觀看教程',
+        videoModalTitle: '充值教程視頻'
       },
       'en': {
         pageTitle: 'ChatGPT Account Recharge System',
@@ -551,7 +708,9 @@
         token_empty: 'Please enter Session Data',
         recharge_success: 'Recharge successful! Your account is now PLUS',
         recharge_fail: 'Recharge failed, please try again later',
-        subStatus: { free: 'Free', plus: 'PLUS' }
+        subStatus: { free: 'Free', plus: 'PLUS' },
+        videoTutorialBtnText: 'Watch Tutorial',
+        videoModalTitle: 'Recharge Tutorial Video'
       }
     };
 
@@ -786,6 +945,53 @@
                         type === 'success' ? 'alert-success' : 'alert-info';
       container.innerHTML = `<div class="alert ${alertClass}">${message}</div>`;
     }
+
+    // 视频教程相关函数
+    function openVideoTutorial() {
+      const modal = document.getElementById('videoModal');
+      const video = document.getElementById('tutorialVideo');
+      
+      modal.style.display = 'flex';
+      setTimeout(() => {
+        modal.classList.add('show');
+      }, 10);
+      
+      // 如果是video元素，重置到开始
+      if (video && video.tagName === 'VIDEO') {
+        video.currentTime = 0;
+      }
+    }
+
+    function closeVideoTutorial() {
+      const modal = document.getElementById('videoModal');
+      const video = document.getElementById('tutorialVideo');
+      
+      modal.classList.remove('show');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300);
+      
+      // 如果是video元素，暂停播放
+      if (video && video.tagName === 'VIDEO') {
+        video.pause();
+      }
+    }
+
+    // 点击模态框外部关闭
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('videoModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeVideoTutorial();
+        }
+      });
+
+      // ESC键关闭视频
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.getElementById('videoModal').classList.contains('show')) {
+          closeVideoTutorial();
+        }
+      });
+    });
 
     // 初始化
     setLang('zh-CN');
