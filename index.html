@@ -657,22 +657,27 @@
       btn.innerHTML = '<span>验证中...</span>';
       showResult('step1Result', '正在验证CDK...', 'info');
       
-      // 先尝试简单测试API
-      fetch('/api/simple-verify?test=ping', {
+      // 检测是否为本地开发环境
+      const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      if (isLocalDev) {
+        // 本地演示模式
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.innerHTML = `<span>${t.verifyBtnText}</span>`;
+          
+          // 演示成功验证
+          showResult('step1Result', t.cdk_success + ' (本地演示模式)', 'success');
+          setTimeout(() => goToStep(2), 1500);
+        }, 2000);
+        return;
+      }
+      
+      // 线上环境，使用真实API
+      fetch('/api/simple-verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cdk_key: cdkKey })
-      })
-      .then(res => res.json())
-      .then(testData => {
-        console.log('API测试结果:', testData);
-        
-        // 如果测试成功，继续实际验证
-        return fetch('/api/simple-verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ cdk_key: cdkKey })
-        });
       })
       .then(res => res.json())
       .then(data => {
@@ -715,12 +720,29 @@
       btn.innerHTML = '<span>充值中...</span>';
       showResult('step3Result', '正在处理充值...', 'info');
       
+      // 检测是否为本地开发环境
+      const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      if (isLocalDev) {
+        // 本地演示模式
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.innerHTML = `<span>${t.rechargeBtnText}</span>`;
+          
+          // 演示成功充值
+          showResult('step3Result', t.recharge_success + ' (本地演示模式)', 'success');
+          userSub = 'plus';
+          document.getElementById('subValue').textContent = t.subStatus[userSub];
+        }, 3000);
+        return;
+      }
+      
+      // 线上环境，使用真实API
       const requestData = { 
         fetch_token: cdkKey, 
         session_data: JSON.parse(document.getElementById('tokenInput').value) 
       };
       
-      // 使用简化的充值API
       fetch('/api/simple-recharge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
