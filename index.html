@@ -263,6 +263,78 @@
       font-size: 14px;
     }
     
+    .contact-section {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 30px;
+      margin: 30px 0;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .contact-title {
+      color: white;
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+    
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+    
+    .contact-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .contact-icon {
+      font-size: 20px;
+      width: 32px;
+      text-align: center;
+    }
+    
+    .contact-label {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+      font-weight: 500;
+      min-width: 80px;
+    }
+    
+    .contact-value {
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Consolas', 'Monaco', monospace;
+    }
+    
+    .contact-link {
+      color: #4CAF50;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .contact-link:hover {
+      color: #66BB6A;
+      text-decoration: underline;
+    }
+
     .footer {
       text-align: center;
       color: rgba(255, 255, 255, 0.6);
@@ -319,6 +391,30 @@
       .lang-switcher {
         top: 16px;
         right: 16px;
+      }
+      
+      .contact-section {
+        padding: 20px;
+        margin: 20px 0;
+      }
+      
+      .contact-title {
+        font-size: 18px;
+      }
+      
+      .contact-item {
+        padding: 10px 12px;
+        gap: 10px;
+      }
+      
+      .contact-label {
+        min-width: 60px;
+        font-size: 13px;
+      }
+      
+      .contact-value,
+      .contact-link {
+        font-size: 13px;
       }
     }
     
@@ -579,6 +675,28 @@
       </div>
     </div>
 
+    <!-- 联系方式 -->
+    <div class="contact-section">
+      <h3 class="contact-title" id="contactTitle">联系我们</h3>
+      <div class="contact-info">
+        <div class="contact-item">
+          <span class="contact-icon">💬</span>
+          <span class="contact-label" id="wechatLabel">微信：</span>
+          <span class="contact-value">bearAi891014</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-icon">📱</span>
+          <span class="contact-label" id="telegramLabel">Telegram：</span>
+          <a href="https://t.me/JackBlacvk" target="_blank" class="contact-link">https://t.me/JackBlacvk</a>
+        </div>
+        <div class="contact-item">
+          <span class="contact-icon">📞</span>
+          <span class="contact-label" id="whatsappLabel">WhatsApp：</span>
+          <a href="https://wa.me/447707324512" target="_blank" class="contact-link">+447707324512</a>
+        </div>
+      </div>
+    </div>
+
     <!-- 页脚 -->
     <div class="footer" id="footerText">
       © 2025 ChatGPT充值系统. 保留所有权利.<br>
@@ -641,7 +759,11 @@
         recharge_fail: '充值失败，请稍后再试',
         subStatus: { free: '免费', plus: 'PLUS' },
         videoTutorialBtnText: '观看教程',
-        videoModalTitle: '充值教程视频'
+        videoModalTitle: '充值教程视频',
+        contactTitle: '联系我们',
+        wechatLabel: '微信：',
+        telegramLabel: 'Telegram：',
+        whatsappLabel: 'WhatsApp：'
       },
       'zh-TW': {
         pageTitle: 'ChatGPT 賬號充值系統',
@@ -676,7 +798,11 @@
         recharge_fail: '充值失敗，請稍後再試',
         subStatus: { free: '免費', plus: 'PLUS' },
         videoTutorialBtnText: '觀看教程',
-        videoModalTitle: '充值教程視頻'
+        videoModalTitle: '充值教程視頻',
+        contactTitle: '聯絡我們',
+        wechatLabel: '微信：',
+        telegramLabel: 'Telegram：',
+        whatsappLabel: 'WhatsApp：'
       },
       'en': {
         pageTitle: 'ChatGPT Account Recharge System',
@@ -711,7 +837,11 @@
         recharge_fail: 'Recharge failed, please try again later',
         subStatus: { free: 'Free', plus: 'PLUS' },
         videoTutorialBtnText: 'Watch Tutorial',
-        videoModalTitle: 'Recharge Tutorial Video'
+        videoModalTitle: 'Recharge Tutorial Video',
+        contactTitle: 'Contact Us',
+        wechatLabel: 'WeChat:',
+        telegramLabel: 'Telegram:',
+        whatsappLabel: 'WhatsApp:'
       }
     };
 
