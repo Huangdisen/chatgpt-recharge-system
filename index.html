@@ -427,6 +427,15 @@
       animation: fadeIn 0.3s ease;
     }
 
+    /* 按钮组容器 */
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
     /* 视频教程按钮 */
     .video-tutorial-btn {
       display: inline-flex;
@@ -441,7 +450,6 @@
       font-weight: 500;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-top: 15px;
       text-decoration: none;
     }
 
@@ -449,6 +457,31 @@
       background: rgba(255, 255, 255, 0.25);
       border-color: rgba(255, 255, 255, 0.5);
       transform: translateY(-2px);
+    }
+
+    /* 购买CDK按钮 */
+    .purchase-cdk-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      border: 2px solid #4CAF50;
+      border-radius: 25px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    }
+
+    .purchase-cdk-btn:hover {
+      background: linear-gradient(135deg, #45a049 0%, #388e3c 100%);
+      border-color: #45a049;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
     }
 
     /* 视频模态框 */
@@ -550,7 +583,13 @@
         font-size: 16px;
       }
       
-      .video-tutorial-btn {
+      .action-buttons {
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .video-tutorial-btn,
+      .purchase-cdk-btn {
         font-size: 12px;
         padding: 8px 16px;
       }
@@ -571,11 +610,17 @@
       <h1 class="title" id="pageTitle">ChatGPT 账号充值系统</h1>
       <p class="subtitle" id="pageSubtitle">安全、快捷的充值服务</p>
       
-      <!-- 视频教程按钮 -->
-      <button class="video-tutorial-btn" onclick="openVideoTutorial()">
-        <span>🎥</span>
-        <span id="videoTutorialBtnText">观看教程</span>
-      </button>
+      <!-- 教程和购买按钮组 -->
+      <div class="action-buttons">
+        <button class="video-tutorial-btn" onclick="openVideoTutorial()">
+          <span>🎥</span>
+          <span id="videoTutorialBtnText">观看教程</span>
+        </button>
+        <a href="https://bearai.top/" target="_blank" class="purchase-cdk-btn">
+          <span>🛒</span>
+          <span id="purchaseCdkBtnText">购买CDK</span>
+        </a>
+      </div>
     </div>
 
     <!-- 步骤指示器 -->
@@ -763,7 +808,8 @@
         contactTitle: '联系我们',
         wechatLabel: '微信：',
         telegramLabel: 'Telegram：',
-        whatsappLabel: 'WhatsApp：'
+        whatsappLabel: 'WhatsApp：',
+        purchaseCdkBtnText: '购买CDK'
       },
       'zh-TW': {
         pageTitle: 'ChatGPT 賬號充值系統',
@@ -802,7 +848,8 @@
         contactTitle: '聯絡我們',
         wechatLabel: '微信：',
         telegramLabel: 'Telegram：',
-        whatsappLabel: 'WhatsApp：'
+        whatsappLabel: 'WhatsApp：',
+        purchaseCdkBtnText: '購買CDK'
       },
       'en': {
         pageTitle: 'ChatGPT Account Recharge System',
@@ -841,7 +888,8 @@
         contactTitle: 'Contact Us',
         wechatLabel: 'WeChat:',
         telegramLabel: 'Telegram:',
-        whatsappLabel: 'WhatsApp:'
+        whatsappLabel: 'WhatsApp:',
+        purchaseCdkBtnText: 'Buy CDK'
       }
     };
 
