@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     }
     
     // 简单直接的请求转发
-    const apiUrl = 'https://gpt.applecz.com/recharge';
+    const apiUrl = 'https://api.gptpluscz.com/recharge';
     
     const response = await fetch(apiUrl, {
       method: 'POST',

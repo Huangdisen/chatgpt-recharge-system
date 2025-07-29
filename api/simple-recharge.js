@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   
   // 实际充值请求
   try {
-    const response = await fetch('https://gpt.applecz.com/recharge', {
+    const response = await fetch('https://api.gptpluscz.com/recharge', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(req.body || {})

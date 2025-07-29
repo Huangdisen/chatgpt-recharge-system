@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   
   // 如果没有测试参数，尝试实际的API调用
   try {
-    const response = await fetch('https://gpt.applecz.com/api/cdks/verify', {
+    const response = await fetch('https://api.gptpluscz.com/api/cdks/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(req.body || { cdk_key: 'test' })

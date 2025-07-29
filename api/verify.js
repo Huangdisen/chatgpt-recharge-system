@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     }
     
     // 简单直接的请求转发，使用与调试相同的方式
-    const apiUrl = 'https://gpt.applecz.com/api/cdks/verify';
+    const apiUrl = 'https://api.gptpluscz.com/api/cdks/verify';
     
     console.log('发送请求到:', apiUrl);
     console.log('请求体:', JSON.stringify(req.body));

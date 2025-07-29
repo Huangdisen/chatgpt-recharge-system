@@ -32,7 +32,7 @@ export default async function handler(req, res) {
   
   // 测试2: 目标API服务器连接
   try {
-    const response = await fetch('https://gpt.applecz.com/api/cdks/verify', {
+    const response = await fetch('https://api.gptpluscz.com/api/cdks/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ cdk_key: 'test' }),
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
   
   // 测试3: DNS解析
   try {
-    const response = await fetch('https://dns.google/resolve?name=gpt.applecz.com&type=A');
+    const response = await fetch('https://dns.google/resolve?name=api.gptpluscz.com&type=A');
     const data = await response.json();
     testResults.tests.push({
       name: 'DNS解析',
