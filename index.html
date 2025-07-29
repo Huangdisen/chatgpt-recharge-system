@@ -505,6 +505,30 @@
       box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
     }
 
+    /* 联系客服按钮 */
+    .contact-service-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+      color: white;
+      border: 2px solid #2196F3;
+      border-radius: 25px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+    }
+
+    .contact-service-btn:hover {
+      background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+      border-color: #1976D2;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+    }
+
     /* 视频模态框 */
     .video-modal {
       display: none;
@@ -589,6 +613,118 @@
       display: block;
     }
 
+    /* 联系客服模态框 */
+    .contact-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .contact-modal.show {
+      display: flex;
+      opacity: 1;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .contact-modal-content {
+      position: relative;
+      background: white;
+      border-radius: 16px;
+      padding: 0;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+      min-width: 600px;
+    }
+
+    .contact-modal.show .contact-modal-content {
+      transform: scale(1);
+    }
+
+    .contact-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 25px;
+      border-bottom: 1px solid #e0e0e0;
+      background: #f8f9fa;
+    }
+
+    .contact-modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+
+    .contact-modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #666;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .contact-modal-close:hover {
+      background: #e9ecef;
+      color: #333;
+    }
+
+    .qr-codes-container {
+      display: flex;
+      justify-content: space-around;
+      padding: 30px 20px 20px;
+      gap: 20px;
+    }
+
+    .qr-code-item {
+      text-align: center;
+      flex: 1;
+      max-width: 150px;
+    }
+
+    .qr-code-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .qr-code-image:hover {
+      transform: scale(1.05);
+    }
+
+    .qr-code-label {
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .contact-tip {
+      text-align: center;
+      padding: 10px 25px 25px;
+      color: #666;
+      font-size: 14px;
+      margin: 0;
+    }
+
     /* 响应式设计 */
     @media (max-width: 600px) {
       .video-modal-content {
@@ -610,9 +746,31 @@
       }
 
       .video-tutorial-btn,
-      .purchase-cdk-btn {
+      .purchase-cdk-btn,
+      .contact-service-btn {
         font-size: 12px;
         padding: 8px 16px;
+      }
+
+      .contact-modal-content {
+        min-width: auto;
+        max-width: 95vw;
+      }
+
+      .qr-codes-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+        padding: 25px 15px 15px;
+      }
+
+      .qr-code-item {
+        max-width: 200px;
+      }
+
+      .qr-code-image {
+        width: 150px;
+        height: 150px;
       }
     }
   </style>
@@ -630,16 +788,20 @@
       <h1 class="title" id="pageTitle">ChatGPT Plus充值系统</h1>
       <p class="subtitle" id="pageSubtitle">无需繁琐绑卡，享受毫秒级顺滑开通</p>
       
-      <!-- 教程和购买按钮组 -->
+            <!-- 教程和购买按钮组 -->
       <div class="action-buttons">
-      <button class="video-tutorial-btn" onclick="openVideoTutorial()">
-        <span>🎥</span>
-        <span id="videoTutorialBtnText">观看教程</span>
-      </button>
+        <button class="video-tutorial-btn" onclick="openVideoTutorial()">
+          <span>🎥</span>
+          <span id="videoTutorialBtnText">观看教程</span>
+        </button>
         <a href="https://bearaiapp.com/" target="_blank" class="purchase-cdk-btn">
           <span>🛒</span>
           <span id="purchaseCdkBtnText">购买CDK</span>
         </a>
+        <button class="contact-service-btn" onclick="openContactService()">
+          <span>💬</span>
+          <span id="contactServiceBtnText">联系客服</span>
+        </button>
       </div>
     </div>
 
@@ -788,6 +950,31 @@
     </div>
   </div>
 
+  <!-- 联系客服模态框 -->
+  <div id="contactModal" class="contact-modal">
+    <div class="contact-modal-content">
+      <div class="contact-modal-header">
+        <h3 class="contact-modal-title" id="contactModalTitle">联系客服</h3>
+        <button class="contact-modal-close" onclick="closeContactService()">×</button>
+      </div>
+      <div class="qr-codes-container">
+        <div class="qr-code-item">
+          <img src="./IMG_8293.jpg" alt="微信客服" class="qr-code-image">
+          <p class="qr-code-label" id="wechatQrLabel">微信客服</p>
+        </div>
+        <div class="qr-code-item">
+          <img src="./IMG_8294.jpg" alt="Telegram客服" class="qr-code-image">
+          <p class="qr-code-label" id="telegramQrLabel">Telegram客服</p>
+        </div>
+        <div class="qr-code-item">
+          <img src="./IMG_8295.jpg" alt="WhatsApp客服" class="qr-code-image">
+          <p class="qr-code-label" id="whatsappQrLabel">WhatsApp客服</p>
+        </div>
+      </div>
+      <p class="contact-tip" id="contactTip">请选择您喜欢的社交工具扫码联系客服</p>
+    </div>
+  </div>
+
   <script>
     // 多语言数据
     const langData = {
@@ -829,7 +1016,13 @@
         wechatLabel: '微信：',
         telegramLabel: 'Telegram：',
         whatsappLabel: 'WhatsApp：',
-        purchaseCdkBtnText: '购买CDK'
+        purchaseCdkBtnText: '购买CDK',
+        contactServiceBtnText: '联系客服',
+        contactModalTitle: '联系客服',
+        wechatQrLabel: '微信客服',
+        telegramQrLabel: 'Telegram客服',
+        whatsappQrLabel: 'WhatsApp客服',
+        contactTip: '请选择您喜欢的社交工具扫码联系客服'
       },
       'zh-TW': {
         pageTitle: 'ChatGPT Plus充值系統',
@@ -869,7 +1062,13 @@
         wechatLabel: '微信：',
         telegramLabel: 'Telegram：',
         whatsappLabel: 'WhatsApp：',
-        purchaseCdkBtnText: '購買CDK'
+        purchaseCdkBtnText: '購買CDK',
+        contactServiceBtnText: '聯絡客服',
+        contactModalTitle: '聯絡客服',
+        wechatQrLabel: '微信客服',
+        telegramQrLabel: 'Telegram客服',
+        whatsappQrLabel: 'WhatsApp客服',
+        contactTip: '請選擇您喜歡的社交工具掃碼聯絡客服'
       },
       'en': {
         pageTitle: 'ChatGPT Plus Recharge System',
@@ -909,7 +1108,13 @@
         wechatLabel: 'WeChat:',
         telegramLabel: 'Telegram:',
         whatsappLabel: 'WhatsApp:',
-        purchaseCdkBtnText: 'Buy CDK'
+        purchaseCdkBtnText: 'Buy CDK',
+        contactServiceBtnText: 'Contact Service',
+        contactModalTitle: 'Contact Service',
+        wechatQrLabel: 'WeChat Service',
+        telegramQrLabel: 'Telegram Service',
+        whatsappQrLabel: 'WhatsApp Service',
+        contactTip: 'Please choose your preferred social tool to scan and contact customer service'
       }
     };
 
@@ -1191,18 +1396,50 @@
       }
     }
 
+    // 联系客服相关函数
+    function openContactService() {
+      const modal = document.getElementById('contactModal');
+      
+      modal.style.display = 'flex';
+      setTimeout(() => {
+        modal.classList.add('show');
+      }, 10);
+    }
+
+    function closeContactService() {
+      const modal = document.getElementById('contactModal');
+      
+      modal.classList.remove('show');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300);
+    }
+
     // 点击模态框外部关闭
     document.addEventListener('DOMContentLoaded', function() {
+      // 视频模态框
       document.getElementById('videoModal').addEventListener('click', function(e) {
         if (e.target === this) {
           closeVideoTutorial();
         }
       });
 
-      // ESC键关闭视频
+      // 联系客服模态框
+      document.getElementById('contactModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeContactService();
+        }
+      });
+
+      // ESC键关闭模态框
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && document.getElementById('videoModal').classList.contains('show')) {
-          closeVideoTutorial();
+        if (e.key === 'Escape') {
+          if (document.getElementById('videoModal').classList.contains('show')) {
+            closeVideoTutorial();
+          }
+          if (document.getElementById('contactModal').classList.contains('show')) {
+            closeContactService();
+          }
         }
       });
     });
