@@ -778,7 +778,7 @@
       </div>
       <div class="video-container">
         <!-- 方案4：自建视频链接 - 使用您的教程视频 -->
-        <video class="video-player" id="tutorialVideo" controls preload="metadata">
+        <video class="video-player" id="tutorialVideo" controls preload="auto" muted>
           <source src="./ed48734e61d12361f3c08e077aeb43c5_WC-EditVideo_1.mp4" type="video/mp4">
           <!-- 备用：如果本地文件不存在，使用示例视频 -->
           <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
@@ -1155,9 +1155,23 @@
         modal.classList.add('show');
       }, 10);
       
-      // 如果是video元素，重置到开始
+      // 如果是video元素，重置到开始并自动播放
       if (video && video.tagName === 'VIDEO') {
         video.currentTime = 0;
+        
+        // 等待模态框显示动画完成后播放视频
+        setTimeout(() => {
+          // 取消静音并尝试播放
+          video.muted = false;
+          video.play().catch(error => {
+            console.log('自动播放被浏览器阻止:', error);
+            // 如果自动播放被阻止，保持静音状态并播放
+            video.muted = true;
+            video.play().catch(fallbackError => {
+              console.log('静音播放也失败:', fallbackError);
+            });
+          });
+        }, 350); // 稍等动画完成
       }
     }
 
@@ -1170,9 +1184,10 @@
         modal.style.display = 'none';
       }, 300);
       
-      // 如果是video元素，暂停播放
+      // 如果是video元素，暂停播放并重置静音状态
       if (video && video.tagName === 'VIDEO') {
         video.pause();
+        video.muted = true; // 重置为静音状态，为下次打开准备
       }
     }
 
